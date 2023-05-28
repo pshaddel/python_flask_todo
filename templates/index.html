@@ -2,4 +2,24 @@
 <title>Home</title>
 {% endblock %} {% block body %}
 <h1>Home</h1>
+<table>
+  <tr>
+    <th>TaskID</th>
+    <th>Task</th>
+    <th>Completed</th>
+    <th>Due Date</th>
+    <th>Actions</th>
+  </tr>
+  {% for task in tasks %}
+  <tr>
+    <td>{{ task.id }}</td>
+    <td>{{ task.content }}</td>
+    <td>{{ task.completed }}</td>
+    <td>{{ task.date_created }}</td>
+    <td>
+      <a href="{{ url_for('update', id=task.id) }}">Update</a>
+      <a href="{{ url_for('delete', id=task.id) }}">Delete</a>
+    </td>
+  </tr>
+</table>
 {% endblock %}
