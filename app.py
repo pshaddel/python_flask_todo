@@ -11,9 +11,15 @@ class Todo (db.Model):
     content = db.Column(db.String(200), nullable=False)
     completed = db.Column(db.Integer, default=0)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    is_deleted = db.Column(db.Integer, default=0)
 
     def __repr__ (self):
         return '<Task %r>' % self.id
+
+# Delete all tables and create new ones
+with app.app_context():
+    db.drop_all()
+    db.create_all()
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -28,16 +34,16 @@ def index():
         except:
             return 'There was an error adding the task'
     else:
-        tasks = Todo.query.order_by(Todo.date_created).all()
+        # get tasks from database which are not deleted
+        all_tasks = Todo.query.order_by(Todo.date_created).all()
+        tasks = Todo.query.order_by(Todo.date_created).filter_by(is_deleted=0).all()
         return render_template('index.html', tasks=tasks)
 
 @app.route ('/tasks/delete/<int:id>', methods=['POST'])
 def delete(id):
-    print('delete')
-    print(id)
     task_to_delete = Todo.query.get_or_404(id)
     try:
-        db.session.delete(task_to_delete)
+        task_to_delete.is_deleted = 1
         db.session.commit()
         return redirect('/')
     except:

@@ -1,8 +1,17 @@
 {% extends 'base.html' %} {% block head %}
 <title>Home</title>
 {% endblock %} {% block body %}
-<h1>Home</h1>
-<table>
+<h1 style="padding: 10px; margin: 20px">Tasky</h1>
+<table style="text-align: center; margin: auto">
+  <tr style="margin: 20px; padding: 20px">
+    <td colspan="5">
+      <form action="/" method="POST" style="margin: auto; text-align: center">
+        <input type="text" name="content" />
+        <input type="submit" value="Add Task" />
+      </form>
+    </td>
+  </tr>
+  {% if tasks|length %}
   <tr>
     <th>TaskID</th>
     <th>Task</th>
@@ -10,8 +19,8 @@
     <th>Due Date</th>
     <th>Actions</th>
   </tr>
-  {% for task in tasks %}
   <tr>
+    {% for task in tasks %}
     <td>{{ task.id }}</td>
     <td>{{ task.content }}</td>
     <td>{{ task.completed}}</td>
@@ -23,12 +32,11 @@
       </form>
     </td>
   </tr>
-  {% endfor %}
+  {% endfor %} {% else %}
+  <tr>
+    <td colspan="5">It's time to create your first Task!</td>
+  </tr>
+  {% endif %}
 </table>
-
-<form action="/" method="POST">
-  <input type="text" name="content" />
-  <input type="submit" value="Add Task" />
-</form>
 
 {% endblock %}
