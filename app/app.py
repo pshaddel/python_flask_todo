@@ -1,7 +1,8 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 app = Flask(__name__)
+from datetime import datetime
+# from models.todo import Todo
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
@@ -16,7 +17,21 @@ class Todo (db.Model):
     def __repr__ (self):
         return '<Task %r>' % self.id
 
-# Delete all tables and create new ones
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        self.is_deleted = 1
+        self.update()
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @staticmethod
+    def getTasks():
+        return Todo.query.order_by(Todo.date_created).filter_by(is_deleted=0).all()
+
 with app.app_context():
     db.drop_all()
     db.create_all()
@@ -28,23 +43,19 @@ def index():
         new_task = Todo (content=task_content)
 
         try:
-            db.session.add(new_task)
-            db.session.commit()
+            new_task.save()
             return redirect('/')
         except:
             return 'There was an error adding the task'
     else:
-        # get tasks from database which are not deleted
-        all_tasks = Todo.query.order_by(Todo.date_created).all()
-        tasks = Todo.query.order_by(Todo.date_created).filter_by(is_deleted=0).all()
+        tasks = Todo.getTasks()
         return render_template('index.html', tasks=tasks)
 
 @app.route ('/tasks/delete/<int:id>', methods=['POST'])
 def delete(id):
-    task_to_delete = Todo.query.get_or_404(id)
+    task = Todo.query.get_or_404(id)
     try:
-        task_to_delete.is_deleted = 1
-        db.session.commit()
+        task.delete()
         return redirect('/')
     except:
         return 'There was a problem deleting that task'
@@ -57,7 +68,7 @@ def update(id):
         print(id)
         task.content = request.form['content']
         try:
-            db.session.commit()
+            task.update()
             return redirect('/')
         except:
             return 'There was a problem updating that task'
