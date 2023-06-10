@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from models.models import Todo, db
+from models.models import Todo, db, User
 
 app = Flask(__name__)
 
@@ -51,5 +51,32 @@ def update(id):
             return 'There was a problem updating that task'
     else:
         return render_template('update.html', task=task)
+
+@app.route ('/users/register/', methods=['GET', 'POST'])
+def register():
+    # print string representation of all users
+    stringUsers = User.getUsers()
+    for user in stringUsers:
+        print(user)
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        # hash password
+        password = hash(password)
+        new_user = User (name=name, email=email, password=password)
+
+        try:
+            result = new_user.save() # returns a boolean, if False it means the email already exists
+            if not result:
+                # send a flashed message to the register page
+                return render_template('register.html', message='Email already exists')
+            return redirect('/')
+        except Exception as e:
+            print(e)
+            return 'There was an error adding the user'
+    else:
+        return render_template('register.html')
+
 if __name__ == '__main__':
      app.run(port=8000, debug=True)

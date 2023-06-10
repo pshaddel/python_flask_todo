@@ -42,3 +42,35 @@ class Todo (db.Model):
     @staticmethod
     def getTasks():
         return Todo.query.order_by(Todo.date_created).filter_by(is_deleted=0).all()
+
+class User (db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=True)
+    email = db.Column(db.String(200), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    is_deleted = db.Column(db.Integer, default=0)
+
+    def __repr__ (self):
+        return '<User %r>' % self.id
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        self.is_deleted = 1
+        self.update()
+
+    def save(self):
+        # first check if user already exists
+        user = User.query.filter_by(email=self.email).first()
+        if user is None:
+            db.session.add(self)
+            db.session.commit()
+            return True
+        else:
+            return False
+
+    # implement getUsers() method
+    @staticmethod
+    def getUsers():
+        return User.query.order_by(User.id).filter_by(is_deleted=0).all()
