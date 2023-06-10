@@ -1,36 +1,13 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
-app = Flask(__name__)
 from datetime import datetime
-# from models.todo import Todo
+from models.models import Todo, db
+
+app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db = SQLAlchemy(app)
-
-class Todo (db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(200), nullable=False)
-    completed = db.Column(db.Integer, default=0)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    is_deleted = db.Column(db.Integer, default=0)
-
-    def __repr__ (self):
-        return '<Task %r>' % self.id
-
-    def update(self):
-        db.session.commit()
-
-    def delete(self):
-        self.is_deleted = 1
-        self.update()
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    @staticmethod
-    def getTasks():
-        return Todo.query.order_by(Todo.date_created).filter_by(is_deleted=0).all()
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
 
 with app.app_context():
     db.drop_all()
