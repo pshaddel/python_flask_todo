@@ -42,7 +42,8 @@ def addTask():
     new_task = Todo (content=task_content, user_id=user_id)
     try:
         new_task.save()
-        return redirect('/')
+        # redirect to index with url_for
+        return redirect(url_for('index'))
     except:
         return 'There was an error adding the task'
 
@@ -51,7 +52,7 @@ def delete(id):
     task = Todo.query.get_or_404(id)
     try:
         task.delete()
-        return redirect('/')
+        return redirect(url_for('index'))
     except:
         return 'There was a problem deleting that task'
 
@@ -64,7 +65,7 @@ def update(id):
         task.content = request.form['content']
         try:
             task.update()
-            return redirect('/')
+            return redirect(url_for('index'))
         except:
             return 'There was a problem updating that task'
     else:
@@ -89,7 +90,7 @@ def register():
             if not result:
                 # send a flashed message to the register page
                 return render_template('register.html', message='Email already exists')
-            return redirect('/')
+            return redirect(url_for('index'))
         except Exception as e:
             print(e)
             return 'There was an error adding the user'
@@ -111,7 +112,7 @@ def login():
             print(user.id)
             session['user_id'] = user.id
             session.permanent = True
-            return redirect('/')
+            return redirect(url_for('index'))
         else:
             print('unsuccessful login')
             return render_template('login.html', message='Email or password is incorrect')
@@ -122,7 +123,7 @@ def login():
 @login_required
 def logout():
     session.pop('user_id', None)
-    return redirect('/')
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
      app.run(port=8000, debug=True)
