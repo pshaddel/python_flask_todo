@@ -19,6 +19,7 @@ db = SQLAlchemy()
 
 class Todo (db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
     content = db.Column(db.String(200), nullable=False)
     completed = db.Column(db.Integer, default=0)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
@@ -40,8 +41,8 @@ class Todo (db.Model):
 
     # implement getTasks() method
     @staticmethod
-    def getTasks():
-        return Todo.query.order_by(Todo.date_created).filter_by(is_deleted=0).all()
+    def getTasks(user_id):
+        return Todo.query.order_by(Todo.date_created).filter_by(is_deleted=0, user_id=user_id).all()
 
 class User (db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,3 +75,11 @@ class User (db.Model):
     @staticmethod
     def getUsers():
         return User.query.order_by(User.id).filter_by(is_deleted=0).all()
+
+    @staticmethod
+    def getUserByEmail(email):
+        return User.query.filter_by(email=email).first()
+
+    @staticmethod
+    def getUserByEmailAndPassword(email, password):
+        return User.query.filter_by(email=email, password=password).first()

@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block head %}
+<title>Register</title>
+{% endblock %} {% block body %}
+<h1 style="padding: 10px; margin: 20px">Login</h1>
+<p style="padding: 10px; margin: 20px">
+  Do not have an account? <a href="/users/register">Register</a>
+</p>
+
+{% if message %}
+<p style="padding: 10px; margin: 20px">{{ message }}</p>
+{% endif %}
+<table style="text-align: center; margin: auto">
+  <tr style="margin: 20px; padding: 20px">
+    <td colspan="5">
+      <form
+        action="/users/login"
+        method="POST"
+        style="margin: auto; text-align: center"
+      >
+        <input
+          style="display: block; margin: 20px"
+          type="text"
+          name="email"
+          placeholder="email"
+        />
+        <input
+          style="display: block; margin: 20px"
+          type="password"
+          name="password"
+          placeholder="password"
+        />
+        <input
+          style="display: block; margin: 20px"
+          type="submit"
+          value="Login"
+        />
+      </form>
+    </td>
+  </tr>
+</table>
+
+{% endblock %}

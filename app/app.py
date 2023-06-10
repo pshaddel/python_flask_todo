@@ -1,32 +1,50 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from models.models import Todo, db, User
+from functools import wraps
+import hashlib
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.sqlite'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'mysecretkey'
+app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
+
 db.init_app(app)
 
 with app.app_context():
     db.drop_all()
     db.create_all()
 
-@app.route('/', methods=['POST', 'GET'])
-def index():
-    if request.method == 'POST':
-        task_content = request.form['content']
-        new_task = Todo (content=task_content)
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            print('not session')
+            return redirect(url_for('login'))
+        print('session')
+        return f(*args, **kwargs)
+    return decorated_function
 
-        try:
-            new_task.save()
-            return redirect('/')
-        except:
-            return 'There was an error adding the task'
-    else:
-        tasks = Todo.getTasks()
-        return render_template('index.html', tasks=tasks)
+@app.route ('/', methods=['GET'])
+@login_required
+def index():
+    tasks = Todo.getTasks(user_id=session['user_id'])
+    return render_template('index.html', tasks=tasks)
+
+@app.route('/', methods=['POST'])
+@login_required
+def addTask():
+    task_content = request.form['content']
+    user_id = session['user_id']
+    new_task = Todo (content=task_content, user_id=user_id)
+    try:
+        new_task.save()
+        return redirect('/')
+    except:
+        return 'There was an error adding the task'
 
 @app.route ('/tasks/delete/<int:id>', methods=['POST'])
 def delete(id):
@@ -63,8 +81,8 @@ def register():
         email = request.form['email']
         password = request.form['password']
         # hash password
-        password = hash(password)
-        new_user = User (name=name, email=email, password=password)
+        hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        new_user = User (name=name, email=email, password=hashed_password)
 
         try:
             result = new_user.save() # returns a boolean, if False it means the email already exists
@@ -77,6 +95,34 @@ def register():
             return 'There was an error adding the user'
     else:
         return render_template('register.html')
+
+@app.route ('/users/login/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        # hash password
+        hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        # check if email and password match
+        user = User.getUserByEmailAndPassword(email, hashed_password)
+        if user:
+            print('successful login')
+            # set session
+            print(user.id)
+            session['user_id'] = user.id
+            session.permanent = True
+            return redirect('/')
+        else:
+            print('unsuccessful login')
+            return render_template('login.html', message='Email or password is incorrect')
+    else:
+        return render_template('login.html')
+
+@app.route ('/users/logout/', methods=['GET'])
+@login_required
+def logout():
+    session.pop('user_id', None)
+    return redirect('/')
 
 if __name__ == '__main__':
      app.run(port=8000, debug=True)
