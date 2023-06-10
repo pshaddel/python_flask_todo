@@ -9,6 +9,26 @@
     {% block head %} {% endblock %}
   </head>
   <body>
+    <!-- user Info -->
+    {% if session['user_id'] %}
+    <div class="user-info">
+      <p>
+        Hi
+        <strong>{{ user['name'] }}</strong>!
+      </p>
+    </div>
+    {% endif %}
+    <nav>
+      <ul>
+        {% if session['user_id'] %}
+        <li><a href="{{ url_for('index') }}">Tasks</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+        <li><a href="{{ url_for('register') }}">Register</a></li>
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        {% endif %}
+      </ul>
+    </nav>
     {% block body %} {% endblock %}
   </body>
 </html>

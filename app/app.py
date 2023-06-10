@@ -32,7 +32,8 @@ def login_required(f):
 @login_required
 def index():
     tasks = Todo.getTasks(user_id=session['user_id'])
-    return render_template('index.html', tasks=tasks)
+    user = User.getUserById(session['user_id'])
+    return render_template('index.html', tasks=tasks, user=user)
 
 @app.route('/', methods=['POST'])
 @login_required

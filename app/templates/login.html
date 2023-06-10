@@ -3,7 +3,7 @@
 {% endblock %} {% block body %}
 <h1 style="padding: 10px; margin: 20px">Login</h1>
 <p style="padding: 10px; margin: 20px">
-  Do not have an account? <a href="/users/register">Register</a>
+  Do not have an account? <a href="{{ url_for('register') }}">Register</a>
 </p>
 
 {% if message %}

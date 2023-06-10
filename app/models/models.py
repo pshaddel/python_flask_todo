@@ -83,3 +83,7 @@ class User (db.Model):
     @staticmethod
     def getUserByEmailAndPassword(email, password):
         return User.query.filter_by(email=email, password=password).first()
+
+    @staticmethod
+    def getUserById(id):
+        return User.query.filter_by(id=id).first()
