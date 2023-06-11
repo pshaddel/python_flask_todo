@@ -30,25 +30,31 @@
   </tr>
   {% if tasks|length %}
   <tr>
-    <th>TaskID</th>
+    <!-- <th>TaskID</th> -->
     <th>Task</th>
     <th>Completed</th>
     <th>Priority</th>
-    <th>Due Date</th>
+    <th>Date</th>
     <th>Actions</th>
   </tr>
   <tr>
     {% for task in tasks %}
-    <td>{{ task.id }}</td>
+    <!-- <td>{{ task.id }}</td> -->
     <td>{{ task.content }}</td>
-    <td>{{ task.completed}}</td>
+    <td><input type="checkbox" value="{{task.completed}}" /></td>
     <td>{{ task.priority }}</td>
     <td>{{ task.date_created.date() }}</td>
     <td>
-      <a href="tasks/update/{{ task.id }}">Update</a>
+      <button>
+        <a
+          style="text-decoration: none; color: black"
+          href="tasks/update/{{ task.id }}"
+          >Edit</a
+        >
+      </button>
       <form action="tasks/delete/{{ task.id }}" method="POST">
         {{ form.csrf_token }}
-        <input type="submit" value="Delete" />
+        <input style="padding: 1px" type="submit" value="Delete" />
       </form>
     </td>
   </tr>
