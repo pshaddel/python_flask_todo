@@ -6,8 +6,24 @@
   <tr style="margin: 20px; padding: 20px">
     <td colspan="5">
       <form action="/" method="POST" style="margin: auto; text-align: center">
+        {{ form.csrf_token }}
+
         <input type="text" name="content" placeholder="Title" />
+        {% if form.content.errors %}
+        <p
+          style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px"
+        >
+          {% for error in form.content.errors %} {{ error }} {% endfor %}
+        </p>
+        {% endif %}
         <input type="number" name="priority" placeholder="Task Priority" />
+        {% if form.priority.errors %}
+        <p
+          style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px"
+        >
+          {% for error in form.priority.errors %} {{ error }} {% endfor %}
+        </p>
+        {% endif %}
         <input type="submit" value="Add Task" />
       </form>
     </td>
