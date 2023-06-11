@@ -69,6 +69,7 @@ input:focus {
   margin: auto;
   margin-top: 50px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 380px;
 }
 .container input {
   width: 90%;

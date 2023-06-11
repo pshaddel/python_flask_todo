@@ -6,7 +6,7 @@ class RegistrationForm(FlaskForm):
     # name is optional string field
     name = StringField('name')
     email = StringField('email', validators=[DataRequired(), Email()])
-    password = PasswordField('password', validators=[DataRequired(), Length(min=6), Regexp('[A-Z]+', message='Password must contain at least one uppercase letter')])
+    password = PasswordField('password', validators=[DataRequired()])
     confirm = PasswordField('confirm', validators=[DataRequired(), EqualTo('password')])
 
 class LoginForm(FlaskForm):
