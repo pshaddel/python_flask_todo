@@ -39,8 +39,9 @@ def index():
 @login_required
 def addTask():
     task_content = request.form['content']
+    task_priority = request.form.get('priority') or 0
     user_id = session['user_id']
-    new_task = Todo (content=task_content, user_id=user_id)
+    new_task = Todo (content=task_content, user_id=user_id, priority=task_priority)
     try:
         new_task.save()
         # redirect to index with url_for

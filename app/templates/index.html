@@ -6,7 +6,8 @@
   <tr style="margin: 20px; padding: 20px">
     <td colspan="5">
       <form action="/" method="POST" style="margin: auto; text-align: center">
-        <input type="text" name="content" />
+        <input type="text" name="content" placeholder="Title" />
+        <input type="number" name="priority" placeholder="Task Priority" />
         <input type="submit" value="Add Task" />
       </form>
     </td>
@@ -16,6 +17,7 @@
     <th>TaskID</th>
     <th>Task</th>
     <th>Completed</th>
+    <th>Priority</th>
     <th>Due Date</th>
     <th>Actions</th>
   </tr>
@@ -24,6 +26,7 @@
     <td>{{ task.id }}</td>
     <td>{{ task.content }}</td>
     <td>{{ task.completed}}</td>
+    <td>{{ task.priority }}</td>
     <td>{{ task.date_created.date() }}</td>
     <td>
       <a href="tasks/update/{{ task.id }}">Update</a>
