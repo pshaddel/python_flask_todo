@@ -8,7 +8,8 @@ import hashlib
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.sqlite'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# create sqlite file if it doesn't exist
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'mysecretkey'
 app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
 
@@ -128,4 +129,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-     app.run(port=8000, debug=True)
+     app.run(port=8000, debug=False)
