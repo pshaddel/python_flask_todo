@@ -1,7 +1,19 @@
 {% block body %}
 <h1>Update Task</h1>
 <form action="/tasks/update/{{ task.id }}" method="POST">
+  <!-- {{ form.csrf_token }} -->
   <input type="text" name="content" value="{{ task.content }}" />
+  {% if form.content.errors %}
+  <p style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px">
+    {% for error in form.content.errors %} {{ error }} {% endfor %}
+  </p>
+  {% endif %}
+  <input type="number" name="priority" value="{{ task.priority }}" />
+  {% if form.priority.errors %}
+  <p style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px">
+    {% for error in form.priority.errors %} {{ error }} {% endfor %}
+  </p>
+  {% endif %}
   <input type="submit" value="Update" />
 </form>
 {% endblock %}

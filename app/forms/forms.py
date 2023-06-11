@@ -17,3 +17,8 @@ class AddTaskForm(FlaskForm):
     content = StringField('content', validators=[DataRequired()])
     priority = IntegerField('priority', validators=[DataRequired(), NumberRange(min=1)])
     submit = SubmitField('submit')
+
+class UpdateTaskForm(FlaskForm):
+    content = StringField('content', validators=[DataRequired()])
+    priority = IntegerField('priority', validators=[DataRequired(), NumberRange(min=1)])
+    submit = SubmitField('submit')

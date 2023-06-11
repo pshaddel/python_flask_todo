@@ -1,83 +1,66 @@
 {% extends 'base.html' %} {% block head %}
 <title>Register</title>
 {% endblock %} {% block body %}
-<h1 style="padding: 10px; margin: 20px">Register</h1>
-<p style="padding: 10px; margin: 20px">
-  Already have an account? <a href="{{ url_for('login') }}">Login</a>
-</p>
+<div class="container">
+  <h1 style="padding: 10px; margin: 20px">Register</h1>
+  <p style="padding: 10px; margin: 20px">
+    Already have an account? <a href="{{ url_for('login') }}">Login</a>
+  </p>
 
-{% if message %}
-<p style="padding: 10px; margin: 20px">{{ message }}</p>
-{% endif %}
-<table style="text-align: center; margin: auto">
-  <tr style="margin: 20px; padding: 20px">
-    <td colspan="5">
-      <form
-        action="/users/register"
-        method="POST"
-        style="margin: auto; text-align: center"
-      >
-        {{ form.csrf_token }}
-        <input
-          style="display: block; margin: 20px; margin-bottom: 0px"
-          type="text"
-          name="name"
-          placeholder="name"
-        />
-        {% if form.name.errors %}
-        <p
-          style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px"
-        >
-          {{ form.name.errors[0] }}
-        </p>
-        {% endif %}
-        <input
-          style="display: block; margin: 20px; margin-bottom: 0px"
-          type="text"
-          name="email"
-          placeholder="email"
-        />
-        {% if form.email.errors %}
-        <p
-          style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px"
-        >
-          {{ form.email.errors[0] }}
-        </p>
-        {% endif %}
-        <input
-          style="display: block; margin: 20px; margin-bottom: 0px"
-          type="password"
-          name="password"
-          placeholder="password"
-        />
-        {% if form.password.errors %}
-        <p
-          style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px"
-        >
-          {{ form.password.errors[0] }}
-        </p>
-        {% endif %}
-        <input
-          style="display: block; margin: 20px; margin-bottom: 0px"
-          type="password"
-          name="confirm"
-          placeholder="confirm password"
-        />
-        {% if form.confirm.errors %}
-        <p
-          style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px"
-        >
-          {{ form.confirm.errors[0] }}
-        </p>
-        {% endif %}
-        <input
-          style="display: block; margin: 20px"
-          type="submit"
-          value="Sign Up"
-        />
-      </form>
-    </td>
-  </tr>
-</table>
-
+  {% if message %}
+  <p style="padding: 10px; margin: 20px">{{ message }}</p>
+  {% endif %}
+  <form
+    action="/users/register"
+    method="POST"
+    style="margin: auto; text-align: center"
+  >
+    {{ form.csrf_token }}
+    <input
+      style="display: block; margin: 20px; margin-bottom: 0px"
+      type="text"
+      name="name"
+      placeholder="name"
+    />
+    {% if form.name.errors %}
+    <p style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px">
+      {{ form.name.errors[0] }}
+    </p>
+    {% endif %}
+    <input
+      style="display: block; margin: 20px; margin-bottom: 0px"
+      type="text"
+      name="email"
+      placeholder="email"
+    />
+    {% if form.email.errors %}
+    <p style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px">
+      {{ form.email.errors[0] }}
+    </p>
+    {% endif %}
+    <input
+      style="display: block; margin: 20px; margin-bottom: 0px"
+      type="password"
+      name="password"
+      placeholder="password"
+    />
+    {% if form.password.errors %}
+    <p style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px">
+      {{ form.password.errors[0] }}
+    </p>
+    {% endif %}
+    <input
+      style="display: block; margin: 20px; margin-bottom: 0px"
+      type="password"
+      name="confirm"
+      placeholder="confirm password"
+    />
+    {% if form.confirm.errors %}
+    <p style="color: red; font-size: 78%; margin: auto; margin-bottom: 10px">
+      {{ form.confirm.errors[0] }}
+    </p>
+    {% endif %}
+    <input style="display: block; margin: 20px" type="submit" value="Sign Up" />
+  </form>
+</div>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block head %}
 <title>Home</title>
 {% endblock %} {% block body %}
-<h1 style="padding: 10px; margin: 20px">Tasky</h1>
+<!-- <h1 style="padding: 10px; margin: 20px">Tasky</h1> -->
 <table style="text-align: center; margin: auto">
   <tr style="margin: 20px; padding: 20px">
     <td colspan="5">
@@ -24,7 +24,7 @@
           {% for error in form.priority.errors %} {{ error }} {% endfor %}
         </p>
         {% endif %}
-        <input type="submit" value="Add Task" />
+        <input class="button" type="submit" value="Add Task" />
       </form>
     </td>
   </tr>
@@ -47,6 +47,7 @@
     <td>
       <a href="tasks/update/{{ task.id }}">Update</a>
       <form action="tasks/delete/{{ task.id }}" method="POST">
+        {{ form.csrf_token }}
         <input type="submit" value="Delete" />
       </form>
     </td>

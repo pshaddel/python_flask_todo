@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from models.models import Todo, db, User
-from forms.forms import RegistrationForm, LoginForm, AddTaskForm
+from forms.forms import RegistrationForm, LoginForm, AddTaskForm, UpdateTaskForm
 from flask_wtf.csrf import CSRFProtect
 
 from functools import wraps
@@ -17,7 +17,7 @@ app.secret_key = 'mysecretkey'
 app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
 
 db.init_app(app)
-csrf = CSRFProtect(app)
+# csrf = CSRFProtect(app)
 
 with app.app_context():
     db.drop_all()
@@ -87,17 +87,19 @@ def delete(id):
 @app.route ('/tasks/update/<int:id>', methods=['GET', 'POST'])
 def update(id):
     task = Todo.query.get_or_404(id)
+    form = UpdateTaskForm()
     if request.method == 'POST':
         print('update')
         print(id)
         task.content = request.form['content']
+        task.priority = request.form.get('priority') or 0
         try:
             task.update()
             return redirect(url_for('index'))
         except:
             return 'There was a problem updating that task'
     else:
-        return render_template('update.html', task=task)
+        return render_template('update.html', task=task, form=form)
 
 @app.route ('/users/register/', methods=['GET', 'POST'])
 def register():
