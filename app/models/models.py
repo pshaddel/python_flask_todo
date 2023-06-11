@@ -39,7 +39,8 @@ class User (db.Model):
     is_deleted = db.Column(db.Integer, default=0)
 
     def __repr__ (self):
-        return '<User %r>' % self.id
+        # user id name email
+        return 'User %r %r %r' % self.id, self.name, self.email
 
     def update(self):
         db.session.commit()
@@ -74,3 +75,40 @@ class User (db.Model):
     @staticmethod
     def getUserById(id):
         return User.query.filter_by(id=id).first()
+
+class Tags (db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    def __repr__ (self):
+        return 'Tag' + self.id + ' ' + self.name
+
+    def save(self):
+        exist = Tags.query.filter_by(name=self.name).first()
+        if exist is None:
+            db.session.add(self)
+            db.session.commit()
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def getTasksStartWithPhrase(self, phrase):
+        # return only 5 tags
+        return Tags.query.filter(Tags.name.like(phrase + '%')).limit(5).all()
+
+class Task_Tags (db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer, nullable=False)
+    tag_id = db.Column(db.Integer, nullable=False)
+    def __repr__ (self):
+        return 'Task_Tags' + self.id + ' ' + self.task_id + ' ' + self.tag_id
+
+    def save(self):
+        # check if task_tag already exists
+        exist = Task_Tags.query.filter_by(task_id=self.task_id, tag_id=self.tag_id).first()
+        if exist is not None:
+            db.session.add(self)
+            db.session.commit()
+            return True
+        else:
+            return False
